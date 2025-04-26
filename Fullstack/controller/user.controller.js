@@ -94,7 +94,13 @@ const verifyUser = async (req, res) => {
       message: "Invalid token",
     });
   }
+
   const user = await User.findOne({ verificationToken: chai });
-  
+
+  if (!user) {
+    return res.status(400).json({
+      message: "Invalid token",
+    });
+  }
 };
 export { registerUser, verifyUser };
