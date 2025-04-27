@@ -1,6 +1,7 @@
 import User from "../Model/User.model.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
+import bcrypt from "bcryptjs";
 const registerUser = async (req, res) => {
   // get data
   // validate
@@ -109,5 +110,32 @@ const verifyUser = async (req, res) => {
   await user.save();
 };
 
+const login = async (req, res) => {
+  const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({
+      message: "All fields are required",
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid email or password",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    console.log(isMatch);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid email or password",
+      });
+    }
+  } catch (error) {}
+};
 export { registerUser, verifyUser };
