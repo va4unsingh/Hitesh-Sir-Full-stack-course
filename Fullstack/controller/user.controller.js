@@ -108,4 +108,6 @@ const verifyUser = async (req, res) => {
 
   await user.save();
 };
+
+
 export { registerUser, verifyUser };
