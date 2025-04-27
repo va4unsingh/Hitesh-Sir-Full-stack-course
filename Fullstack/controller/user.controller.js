@@ -2,6 +2,7 @@ import User from "../Model/User.model.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 const registerUser = async (req, res) => {
   // get data
   // validate
@@ -136,6 +137,10 @@ const login = async (req, res) => {
         message: "Invalid email or password",
       });
     }
+
+    jwt.sign({ id: user._id, role: user.role },"shhhh",{
+      expiresIn: "24h"
+    });
   } catch (error) {}
 };
 export { registerUser, verifyUser };
