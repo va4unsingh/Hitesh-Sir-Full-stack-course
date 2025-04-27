@@ -138,9 +138,37 @@ const login = async (req, res) => {
       });
     }
 
-    jwt.sign({ id: user._id, role: user.role },"shhhh",{
-      expiresIn: "24h"
+    // now verify email this is homework
+
+    // if (!user.isVerified){
+
+    // }
+
+    const token = jwt.sign({ id: user._id, role: user.role }, "shhhh", {
+      expiresIn: "24h",
     });
-  } catch (error) {}
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    };
+    res.cookie("token", token, cookieOptions);
+    res.status(200).json({
+      succes: true,
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Error verifying user",
+      error,
+      success: false,
+    });
+  }
 };
-export { registerUser, verifyUser };
+export { registerUser, verifyUser, login};
