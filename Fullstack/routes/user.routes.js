@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 router.post("/register", registerUser);
-router.get("/verify/:chai", verifyUser);
+router.get("/verify/:token", verifyUser);
 router.get("/login", login);
 
 export default router;

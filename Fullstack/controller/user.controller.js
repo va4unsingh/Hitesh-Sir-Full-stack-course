@@ -66,7 +66,7 @@ const registerUser = async (req, res) => {
 
     await transporter.sendMail(mailOption);
 
-    res.status(200).json({
+    res.status(201).json({
       message: "User registered succesfully",
       succes: true,
     });
@@ -89,15 +89,15 @@ const verifyUser = async (req, res) => {
   // save
   // return repsone
 
-  const { chai } = req.params;
-  console.log(chai);
-  if (!chai) {
+  const { token } = req.params;
+  console.log(token);
+  if (!token) {
     return res.status(400).json({
       message: "Invalid token",
     });
   }
 
-  const user = await User.findOne({ verificationToken: chai });
+  const user = await User.findOne({ verificationToken: token });
 
   if (!user) {
     return res.status(400).json({
@@ -171,4 +171,4 @@ const login = async (req, res) => {
     });
   }
 };
-export { registerUser, verifyUser, login};
+export { registerUser, verifyUser, login };
