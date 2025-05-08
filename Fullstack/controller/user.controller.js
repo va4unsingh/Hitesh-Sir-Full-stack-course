@@ -59,7 +59,7 @@ const registerUser = async (req, res) => {
 
     const mailOption = {
       from: process.env.MAILTRAP_SENDEREMAIL,
-      to: User.email,
+      to: user.email,
       subject: "Verify your email", // Subject line
       text: `Please click on the following link: ${process.env.BASE_URL}/api/v1/users/verify${token}`,
     };
