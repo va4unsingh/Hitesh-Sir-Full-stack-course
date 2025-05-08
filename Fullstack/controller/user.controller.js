@@ -61,7 +61,7 @@ const registerUser = async (req, res) => {
       from: process.env.MAILTRAP_SENDEREMAIL,
       to: user.email,
       subject: "Verify your email", // Subject line
-      text: `Please click on the following link: ${process.env.BASE_URL}/api/v1/users/verify${token}`,
+      text: `Please click on the following link: ${process.env.BASE_URL}/api/v1/users/verify/${token}`,
     };
 
     await transporter.sendMail(mailOption);
@@ -140,9 +140,11 @@ const login = async (req, res) => {
 
     // now verify email this is homework
 
-    // if (!user.isVerified){
-
-    // }
+    if (!user.isVerified) {
+      return res.status(400).json({
+        message: " Please verify your email",
+      });
+    }
 
     const token = jwt.sign({ id: user._id, role: user.role }, "shhhh", {
       expiresIn: "24h",
@@ -155,13 +157,14 @@ const login = async (req, res) => {
     };
     res.cookie("token", token, cookieOptions);
     res.status(200).json({
-      succes: true,
-      message: "Login successful",
-      token, 
+      success: true,
+      message: "Login successful, Your email is verified.",
+      token,
       user: {
         id: user._id,
         name: user.name,
         role: user.role,
+        isVerified: user.isVerified, // optional
       },
     });
   } catch (error) {
