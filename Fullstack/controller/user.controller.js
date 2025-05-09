@@ -197,4 +197,12 @@ const logoutUser = async (req,res) =>{
   }
 }
 
+const forgotPassword = async (req,res) =>{
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
 export { registerUser, verifyUser, login };
