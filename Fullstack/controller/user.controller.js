@@ -192,16 +192,13 @@ const getMe = async (req, res) => {
         message: "User not found",
       });
     }
+    
     res.status(200).json({
       success: true,
       user,
     });
   } catch (error) {
-    res.status(400).json({
-      message: "Error for getMe",
-      error,
-      success: false,
-    });
+    console.log("Error in getMe", error);
   }
 };
 
@@ -233,7 +230,10 @@ const resetPassword = async (req, res) => {
     //
 
     const { token } = req.params;
-    const { password } = req.body;
+    const { password, confPassword } = req.body;
+
+    if (password === confPassword) {
+    }
 
     try {
       const user = await User.findOne({
