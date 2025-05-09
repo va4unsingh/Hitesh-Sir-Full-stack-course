@@ -3,6 +3,7 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
 const registerUser = async (req, res) => {
   // get data
   // validate
@@ -68,13 +69,13 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({
       message: "User registered succesfully",
-      succes: true,
+      success: true,
     });
   } catch (error) {
     res.status(400).json({
       message: "User not registered ",
       error,
-      succes: false,
+      success: false,
     });
   }
 };
@@ -148,7 +149,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
+     "shhhh",
       {
         expiresIn: "24h",
       }
