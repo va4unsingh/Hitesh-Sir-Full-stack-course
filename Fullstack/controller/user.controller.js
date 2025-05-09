@@ -189,4 +189,12 @@ const getMe = async (req,res) =>{
   }
 }
 
+const logoutUser = async (req,res) =>{
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
 export { registerUser, verifyUser, login };
