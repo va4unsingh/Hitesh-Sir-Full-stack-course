@@ -146,9 +146,13 @@ const login = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, "shhhh", {
-      expiresIn: "24h",
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
 
     const cookieOptions = {
       httpOnly: true,
@@ -175,4 +179,5 @@ const login = async (req, res) => {
     });
   }
 };
+
 export { registerUser, verifyUser, login };
