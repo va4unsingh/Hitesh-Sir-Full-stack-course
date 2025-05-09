@@ -186,8 +186,6 @@ const getMe = async (req, res) => {
   } catch (error) {}
 };
 
-
-
 const logoutUser = async (req, res) => {
   try {
   } catch (error) {}
@@ -203,4 +201,12 @@ const resetPassword = async (req, res) => {
   } catch (error) {}
 };
 
-export { registerUser, verifyUser, login };
+export {
+  registerUser,
+  verifyUser,
+  login,
+  getMe,
+  logoutUser,
+  forgotPassword,
+  resetPassword,
+};
