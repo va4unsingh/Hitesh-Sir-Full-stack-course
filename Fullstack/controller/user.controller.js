@@ -205,4 +205,12 @@ const forgotPassword = async (req,res) =>{
   }
 }
 
+const resetPassword = async (req,res) =>{
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
 export { registerUser, verifyUser, login };
