@@ -181,36 +181,26 @@ const login = async (req, res) => {
   }
 };
 
-const getMe = async (req,res) =>{
+const getMe = async (req, res) => {
   try {
-    
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 
-const logoutUser = async (req,res) =>{
-  try {
-    
-  } catch (error) {
-    
-  }
-}
 
-const forgotPassword = async (req,res) =>{
-  try {
-    
-  } catch (error) {
-    
-  }
-}
 
-const resetPassword = async (req,res) =>{
+const logoutUser = async (req, res) => {
   try {
-    
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
+
+const forgotPassword = async (req, res) => {
+  try {
+  } catch (error) {}
+};
+
+const resetPassword = async (req, res) => {
+  try {
+  } catch (error) {}
+};
 
 export { registerUser, verifyUser, login };
