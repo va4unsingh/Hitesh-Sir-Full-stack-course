@@ -192,7 +192,7 @@ const getMe = async (req, res) => {
         message: "User not found",
       });
     }
-    
+
     res.status(200).json({
       success: true,
       user,
@@ -215,37 +215,104 @@ const logoutUser = async (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
+  // get email from req body
+  const { email } = req.body;
+
+  // find user based on email
   try {
-    // get email from req body
-    // find user based on email
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid User",
+      });
+    }
     // reset token + reset expiry => Date.now() + 10*60*1000 => user.save()
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await user.save();
+
     // send mail => design url
-  } catch (error) {}
+    const transporter = nodemailer.createTransport({
+      host: process.env.MAILTRAP_HOST,
+      port: process.env.MAILTRAP_PORT,
+      auth: {
+        user: process.env.MAILTRAP_USERNAME,
+        pass: process.env.MAILTRAP_PASSWORD,
+      },
+    });
+
+    const resetUrl = `${process.env.BASE_URL}/reset-password/${token}`;
+
+    const mailOptions = {
+      from: process.env.MAILTRAP_SENDEREMAIL,
+      to: user.email,
+      subject: "Password Reset",
+      text: `Click this link to reset your password: ${resetUrl}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({
+      message: "Password reset link sent to your email.",
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error sending reset password email",
+      error,
+      success: false,
+    });
+  }
 };
 
 const resetPassword = async (req, res) => {
+  // collect token from params
+  // password from req body
+  //
+
+  const { token } = req.params;
+  const { password, confPassword } = req.body;
+
+  if (!password || !confPassword) {
+    return res
+      .status(400)
+      .json({ message: "Both password fields are required" });
+  }
+
+  if (password !== confPassword) {
+    return res.status(400).json({ message: "Passwords do not match" });
+  }
+
   try {
-    // collect token from params
-    // password from req body
-    //
+    // Find the user by token and check if it's still valid
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
 
-    const { token } = req.params;
-    const { password, confPassword } = req.body;
+    // set password in user
+    // Hash and set new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
 
-    if (password === confPassword) {
-    }
+    // reset token, resetExpiry => reset (empty) empty karna hai
+    // Clear reset token fields
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
 
-    try {
-      const user = await User.findOne({
-        resetPasswordToken: token,
-        resetPasswordExpires: { $gt: Date.now() },
-      });
+    // Save the user
+    await user.save();
 
-      // set password in user
-      // reset token, resetExpiry => reset (empty) empty karna hai
-      // save
-    } catch (error) {}
-  } catch (error) {}
+    res
+      .status(200)
+      .json({ message: "Password reset successful", success: true });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error resetting password", error, success: false });
+  }
 };
 
 export {
