@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 // custom routes
-import userRouter from "./routes/auth.routes";
+import userRouter from "./routes/auth.routes.js";
 
 dotenv.config();
 const port = process.env.PORT || 4000;
