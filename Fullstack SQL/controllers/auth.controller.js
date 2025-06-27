@@ -18,7 +18,7 @@ const registerUser = async (req, res) => {
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
-    if (!existingUser) {
+    if (existingUser) {
       return res.status(400).json({
         success: false,
         message: "User Already Exist",
@@ -49,6 +49,7 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
+  2;
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -102,6 +103,7 @@ const loginUser = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
       },
       message: "Login Done",
     });
